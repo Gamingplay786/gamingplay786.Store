@@ -1,2 +1,438 @@
 # gamingplay786.Store
 This is my Gaming Store.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming play 786 Store</title>
+    <style>
+        /* CSS: Styling and Layout */
+        :root {
+            --primary-color: #6C5CE7;
+            --secondary-color: #00CEC9;
+            --background-dark: #0F172A;
+            --card-bg: #1E293B;
+            --text-light: #F8FAFC;
+            --text-muted: #94A3B8;
+            --easypaisa-color: #27ae60;
+            --jazzcash-color: #e67e22;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-dark);
+            color: var(--text-light);
+            padding: 20px;
+        }
+
+        /* Header Section */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        /* Category Navigation Filters */
+        .category-filters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background-color: var(--card-bg);
+            color: var(--text-light);
+            border: 2px solid var(--primary-color);
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--primary-color);
+        }
+
+        /* Product Display Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-badge {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            color: #2ECC71;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .buy-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .buy-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Purchase Modal (Popup Window) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+
+        .modal-price-tag {
+            font-size: 1.2rem;
+            color: #2ECC71;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* Payment Information Box */
+        .payment-info {
+            background-color: var(--background-dark);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: left;
+        }
+
+        .payment-info h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        .payment-method {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            border-left: 4px solid transparent;
+            background-color: #111827;
+        }
+
+        .payment-method.easypaisa {
+            border-left-color: var(--easypaisa-color);
+        }
+
+        .payment-method.jazzcash {
+            border-left-color: var(--jazzcash-color);
+        }
+
+        .method-title {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .easypaisa .method-title { color: var(--easypaisa-color); }
+        .jazzcash .method-title { color: var(--jazzcash-color); }
+
+        .account-detail {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        /* Input Styles */
+        .modal label {
+            display: block;
+            text-align: left;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+
+        .modal input, .modal select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid var(--text-muted);
+            background-color: var(--background-dark);
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-confirm {
+            background-color: #2ECC71;
+            color: white;
+            border: none;
+            padding: 12px;
+            flex: 1;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-cancel {
+            background-color: #E74C3C;
+            color: white;
+            border: none;
+            padding: 12px;
+            flex: 1;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>⚡ Gaming play 786 Store</h1>
+        <p>Instant Game Top-Up Service in Pakistan</p>
+    </header>
+
+    <!-- Category Filters -->
+    <div class="category-filters">
+        <button class="filter-btn active" onclick="filterProducts('all')">All</button>
+        <button class="filter-btn" onclick="filterProducts('freefire')">Free Fire</button>
+        <button class="filter-btn" onclick="filterProducts('pubg')">PUBG Mobile</button>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="productGrid">
+        <!-- Dynamic content via JavaScript -->
+    </div>
+
+    <!-- Order & Payment Modal Popup -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h2 id="modalProductName">Product Title</h2>
+            <div class="modal-price-tag" id="modalProductPrice">PKR 0</div>
+
+            <!-- Payment Account Details Section -->
+            <div class="payment-info">
+                <h3>💳 Payment Details</h3>
+                
+                <div class="payment-method easypaisa">
+                    <div class="method-title">EasyPaisa</div>
+                    <div class="account-detail">Account Title: <strong id="epName">Gaming Play 786</strong></div>
+                    <div class="account-detail">Account No: <strong id="epNumber">03426788612</strong></div>
+                </div>
+
+                <div class="payment-method jazzcash">
+                    <div class="method-title">JazzCash</div>
+                    <div class="account-detail">Account Title: <strong id="jcName">Gaming Play 786</strong></div>
+                    <div class="account-detail">Account No: <strong id="jcNumber">03426788612</strong></div>
+                </div>
+            </div>
+
+            <!-- User Order Inputs -->
+            <label for="playerIdInput">Game Player ID (UID):</label>
+            <input type="text" id="playerIdInput" placeholder="e.g. 123456789">
+
+            <label for="paymentMethodSelect">Payment Method Used:</label>
+            <select id="paymentMethodSelect">
+                <option value="EasyPaisa">EasyPaisa</option>
+                <option value="JazzCash">JazzCash</option>
+            </select>
+
+            <label for="trxIdInput">Transaction ID (Trx ID / Payment Proof):</label>
+            <input type="text" id="trxIdInput" placeholder="e.g. 8472019382">
+
+            <div class="modal-buttons">
+                <button class="btn-confirm" onclick="sendOrder()">Order via WhatsApp</button>
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION PARAMETERS
+        // 1. WhatsApp Number
+        const YOUR_WHATSAPP_NUMBER = "923426788612";
+
+        // 2. Account Details Configuration (Edit these if account names change)
+        const EASYPAISA_TITLE = "Gaming Play 786";
+        const EASYPAISA_NUMBER = "03426788612";
+        
+        const JAZZCASH_TITLE = "Gaming Play 786";
+        const JAZZCASH_NUMBER = "03426788612";
+
+        // 3. Product Catalog
+        const products = [
+            { id: 1, category: "freefire", title: "100 + 10 Diamonds", price: "PKR 300" },
+            { id: 2, category: "freefire", title: "520 Diamonds", price: "PKR 1,400" },
+            { id: 3, category: "freefire", title: "Weekly Membership", price: "PKR 750" },
+            { id: 4, category: "pubg", title: "60 UC", price: "PKR 280" },
+            { id: 5, category: "pubg", title: "325 UC", price: "PKR 1,450" },
+            { id: 6, category: "pubg", title: "660 UC", price: "PKR 2,850" }
+        ];
+
+        let selectedProduct = null;
+
+        // Populate dynamic payment details into the HTML on script load
+        document.getElementById('epName').innerText = EASYPAISA_TITLE;
+        document.getElementById('epNumber').innerText = EASYPAISA_NUMBER;
+        document.getElementById('jcName').innerText = JAZZCASH_TITLE;
+        document.getElementById('jcNumber').innerText = JAZZCASH_NUMBER;
+
+        // Function: Render products in the grid
+        function renderProducts(items) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = "";
+
+            items.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div>
+                        <div class="product-badge">${product.category}</div>
+                        <div class="product-title">${product.title}</div>
+                    </div>
+                    <div>
+                        <div class="product-price">${product.price}</div>
+                        <button class="buy-btn" onclick="openModal(${product.id})">Buy Now</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Function: Filter products by category
+        function filterProducts(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (category === 'all') {
+                renderProducts(products);
+            } else {
+                const filtered = products.filter(p => p.category === category);
+                renderProducts(filtered);
+            }
+        }
+
+        // Function: Open Order Modal Popup
+        function openModal(productId) {
+            selectedProduct = products.find(p => p.id === productId);
+            document.getElementById('modalProductName').innerText = selectedProduct.title;
+            document.getElementById('modalProductPrice').innerText = selectedProduct.price;
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        // Function: Close Modal Popup and clear input fields
+        function closeModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+            document.getElementById('playerIdInput').value = '';
+            document.getElementById('trxIdInput').value = '';
+        }
+
+        // Function: Format details and redirect to WhatsApp
+        function sendOrder() {
+            const playerId = document.getElementById('playerIdInput').value.trim();
+            const paymentMethod = document.getElementById('paymentMethodSelect').value;
+            const trxId = document.getElementById('trxIdInput').value.trim();
+
+            // Form validation checks
+            if (!playerId) {
+                alert("Please enter your Player ID!");
+                return;
+            }
+
+            if (!trxId) {
+                alert("Please enter your Transaction ID (Trx ID) as proof of payment!");
+                return;
+            }
+
+            // Create formatted WhatsApp order message
+            const message = `Hello Gaming play 786 Store!\nI have made a payment and want to complete my order:\n\n` +
+                            `📦 Item: ${selectedProduct.title}\n` +
+                            `🎮 Category: ${selectedProduct.category.toUpperCase()}\n` +
+                            `💰 Price: ${selectedProduct.price}\n` +
+                            `🆔 Player ID (UID): ${playerId}\n` +
+                            `💳 Payment Method: ${paymentMethod}\n` +
+                            `🧾 Trx ID: ${trxId}`;
+
+            // Generate WhatsApp link
+            const whatsappUrl = `https://wa.me/${YOUR_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
+            // Open link in new window/app tab
+            window.open(whatsappUrl, '_blank');
+            closeModal();
+        }
+
+        // Initial render on load
+        renderProducts(products);
+    </script>
+</body>
+</html>
